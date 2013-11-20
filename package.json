@@ -1,0 +1,14 @@
+{
+  "name": "grape",
+  "version": "0.0.0",
+  "description": "A test lib inspired by Substack's tape",
+  "main": "grape.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "deep-equal": "~0.1.0"
+  }
+}
