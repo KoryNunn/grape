@@ -1,10 +1,14 @@
 var deepEqual = require('deep-equal');
 
+var nextTick = setImmediate || process.nextTick;
+
 var testsToRun = [],
     testsRun = [],
+    totalTests = 0,
     totalAssersions = 0,
     completedAssersions = 0,
-    begun = false;
+    begun = false,
+    timeout = 0;
 
 function runNextTest(){
     while(tests.length){
@@ -14,28 +18,44 @@ function runNextTest(){
     }
 }
 
-function queueTestRun(){
-    if(!testsToRun.length){
-        setTimeout(runNextTest, 100);
-    }
-}
-
 function complete(){
-    if(
+    var results = [];
+
+    if(testsToRun.length !== totalTests){
+        // tests level problem
+    }
+
+    for(var i = 0; i < testsRun.length; i++) {
+        var test = testsRun[i];
+
+        if(test._assersions.length !== test._count){
+            // test level problem
+        }
+
+        results.push.apply(test._assersions);
+
+        // ToDo print results
+        console.log(results);
+    }
 }
 
 function begin(){
     if(!begun){
         begun = true;
-        process.on('exit', function(){
-            complete();
+        nextTick(runNextTest);
+        nextTick(function(){
+            if(typeof process === 'undefined'){
+                setTimeout(complete, timeout);
+            }else{
+                process.on('exit', complete);
+            }
         });
     }
 }
 
 function test(name, callback){
+    totalTests++;
     testsToRun.push(new Test(name, callback));
-    queueTestRun();
     begin();
 }
 
@@ -47,7 +67,9 @@ function Test(name, callback){
     this.callback = callback;
 }
 
-Test.prototype._timeout = 10;
+Test.prototype.timeout = function(time){
+    timeout = Math.max(timeout, time);
+};
 
 Test.prototype.plan = function(count){
     this._expectedCount = count;
