@@ -13,3 +13,27 @@ grape('t.ok', function(t){
 
     t.ok('ok', true);
 });
+
+grape('t.end ok', function(t){
+    var grapeInstance = grape.createNewInstance();
+
+    t.plan(2);
+
+    t.ok('ok', true);
+
+    t.ok('ok', true);
+
+    t.end('ok');
+});
+
+grape('t.end not ok', function(t){
+    var grapeInstance = grape.createNewInstance();
+
+    t.plan(2);
+
+    t.ok('ok', true);
+
+    t.end('ok');
+
+    t.ok('ok', true);
+});

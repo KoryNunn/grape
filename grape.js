@@ -1,4 +1,6 @@
-var deepEqual = require('deep-equal');
+var EventEmitter = require('events').EventEmitter,
+    deepEqual = require('deep-equal'),
+    encodeResults = require('./results');
 
 var nextTick = setImmediate || process.nextTick;
 
@@ -26,19 +28,7 @@ function instantiate(){
             // tests level problem
         }
 
-        for(var i = 0; i < testsRun.length; i++) {
-            var test = testsRun[i];
-
-            if(test._assersions.length !== test._count){
-                // test level problem
-            }
-
-            results.push.apply(results, test._assersions);
-
-        }
-
-        // ToDo print results
-        console.log(results);
+        console.log(encodeResults(testsRun));
     }
 
     function begin(){
@@ -62,19 +52,26 @@ function instantiate(){
     }
 
     function Test(name, testFunction){
-        this._expectedCount = 0;
+        this._plan = 0;
         this._count = 0;
         this._assersions = [];
         this.name = name;
         this._testFunction = testFunction;
     }
+    Test.prototype = Object.create(EventEmitter.prototype);
+    Test.prototype.constructor = Test;
 
     Test.prototype.timeout = function(time){
         timeout = Math.max(timeout, time);
     };
 
+    Test.prototype.comment = function (message) {
+        this.emit('result', message.trim().replace(/^#\s*/, ''));
+    };
+
     Test.prototype.plan = function(count){
-        this._expectedCount = count;
+        this._plan = count;
+        this.emit('plan', count);
     };
 
     Test.prototype._run = function(){
@@ -82,15 +79,38 @@ function instantiate(){
     };
 
     Test.prototype._assert = function(details){
+        if(details.operator === 'end'){
+            if(!details.ok){
+
+            }
+        }
         this._count++;
         this._assersions.push(details);
+    };
+
+    Test.prototype.end = function (message) {
+        var ok = this._plan === this._count;
+
+        if(ok){
+            this._assert({
+                ok: true,
+                message: message,
+                operator: 'end'
+            });
+        }else{
+            this._assert({
+                ok: false,
+                message: 'plan != count',
+                operator: 'end'
+            });
+        }
     };
 
     Test.prototype.pass = function(message){
         this._assert({
             ok: true,
             message: message,
-            assersionName: 'pass'
+            operator: 'pass'
         });
     };
 
@@ -99,7 +119,7 @@ function instantiate(){
             actual: value,
             ok: !!value,
             message: message,
-            assersionName: 'ok'
+            operator: 'ok'
         });
     };
 
@@ -108,7 +128,7 @@ function instantiate(){
             actual: value,
             ok:!value,
             message: message,
-            assersionName: 'notOk'
+            operator: 'notOk'
         });
     };
 
@@ -118,7 +138,7 @@ function instantiate(){
             expected: expected,
             ok:value === expected,
             message: message,
-            assersionName: 'notOk'
+            operator: 'notOk'
         });
     };
 
@@ -128,7 +148,7 @@ function instantiate(){
             expected: expected,
             ok: deepEqual(value, expected, { strict: true }),
             message: message,
-            assersionName: 'deepEqual'
+            operator: 'deepEqual'
         });
     };
 
@@ -138,7 +158,7 @@ function instantiate(){
             expected: expected,
             ok: deepEqual(value, expected),
             message: message,
-            assersionName: 'deepLooseEqual'
+            operator: 'deepLooseEqual'
         });
     };
 
@@ -148,7 +168,7 @@ function instantiate(){
             expected: expected,
             ok: !deepEqual(value, expected, { strict: true }),
             message: message,
-            assersionName: 'notDeepEqual'
+            operator: 'notDeepEqual'
         });
     };
 
@@ -158,7 +178,7 @@ function instantiate(){
             expected: expected,
             ok: !deepEqual(value, expected),
             message: message,
-            assersionName: 'notDeepLooseEqual'
+            operator: 'notDeepLooseEqual'
         });
     };
 
@@ -187,7 +207,7 @@ function instantiate(){
         this._assert({
             ok: passed,
             message : message || 'should throw',
-            assersionName : 'throws',
+            operator : 'throws',
             actual : caughtError && caughtError.error,
             expected : expected,
             error: !passed && caughtError && caughtError.error
