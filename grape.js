@@ -75,7 +75,13 @@ function instantiate(){
     };
 
     Test.prototype._run = function(){
-        this._testFunction(this);
+        var test = this;
+        try {
+            test._testFunction(this);
+        }
+        catch (err) {
+            test.error(err);
+        }
     };
 
     Test.prototype._assert = function(details){
@@ -110,6 +116,15 @@ function instantiate(){
         }
 
         this._ended = true;
+    };
+
+    Test.prototype.error = function(error, message){
+        this._assert({
+            ok: !error,
+            message : message || String(error),
+            operator : 'error',
+            actual : error
+        });
     };
 
     Test.prototype.pass = function(message){

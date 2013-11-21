@@ -45,7 +45,11 @@ function encodeResult (result, count) {
 }
 
 function encodeResults(results){
-    var output = '';
+    var output = '',
+        count = 0,
+        passed = 0,
+        failed = 0;
+
     for(var i = 0; i < results.length; i++) {
         var test = results[i];
 
@@ -60,8 +64,27 @@ function encodeResults(results){
         }
 
         for(var j = 0; j < test._assersions.length; j++) {
-            output += encodeResult(test._assersions[j], j);
+            var assersion = test._assersions[j];
+            count++;
+
+            if(assersion.ok){
+                passed++;
+            }else{
+                failed++;
+            }
+
+            output += encodeResult(assersion, count);
         }
+    }
+
+    output += '\n1..' + count + '\n';
+    output += '# tests ' + count + '\n';
+    output += '# pass  ' + passed + '\n';
+
+    if(failed) {
+        output += '# fail  ' + failed + '\n';
+    }else{
+        output += '\n# ok\n';
     }
 
     return output;

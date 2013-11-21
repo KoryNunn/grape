@@ -7,7 +7,6 @@ grape('doesn\'t explode', function(t){
 });
 
 grape('t.ok', function(t){
-    var grapeInstance = grape.createNewInstance();
 
     t.plan(1);
 
@@ -15,33 +14,40 @@ grape('t.ok', function(t){
 });
 
 grape('t.end ok', function(t){
-    var grapeInstance = grape.createNewInstance();
 
     t.plan(2);
 
-    t.ok('ok', true);
+    t.ok(true, 'ok');
 
-    t.ok('ok', true);
+    t.ok(true, 'ok');
 
     t.end('ok');
 });
 
 grape('t.end not ok', function(t){
-    var grapeInstance = grape.createNewInstance();
 
     t.plan(2);
 
-    t.ok('ok', true);
+    t.ok(true, 'ok');
 
     t.end('ok');
 
-    t.ok('ok', true);
+    t.ok(true, 'ok');
 });
 
 grape('plan != count', function(t){
-    var grapeInstance = grape.createNewInstance();
 
     t.plan(2);
 
-    t.ok('ok', true);
+    t.ok(true, 'ok');
+});
+
+grape('error', function(t){
+
+    t.plan(1);
+
+    // throw an error
+    a.b = c;
+
+    t.ok(true, 'ok');
 });
