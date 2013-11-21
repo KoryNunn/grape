@@ -52,7 +52,11 @@ function encodeResults(results){
         output += '# ' + test.name + '\n';
 
         if(test._plan !== test._count){
-            throw "Not all tests exectued as expected";
+            test._assert({
+                ok: false,
+                message: 'plan != count',
+                operator: 'end'
+            });
         }
 
         for(var j = 0; j < test._assersions.length; j++) {

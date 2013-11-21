@@ -37,3 +37,11 @@ grape('t.end not ok', function(t){
 
     t.ok('ok', true);
 });
+
+grape('plan != count', function(t){
+    var grapeInstance = grape.createNewInstance();
+
+    t.plan(2);
+
+    t.ok('ok', true);
+});

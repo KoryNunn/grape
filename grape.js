@@ -91,6 +91,10 @@ function instantiate(){
     Test.prototype.end = function (message) {
         var ok = this._plan === this._count;
 
+        if(this._ended){
+            return;
+        }
+
         if(ok){
             this._assert({
                 ok: true,
@@ -104,6 +108,8 @@ function instantiate(){
                 operator: 'end'
             });
         }
+
+        this._ended = true;
     };
 
     Test.prototype.pass = function(message){
