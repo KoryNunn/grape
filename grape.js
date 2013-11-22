@@ -129,7 +129,7 @@ Test.prototype.equal = function(value, expected, message){
         expected: expected,
         ok: value === expected,
         message: message,
-        operator: 'notOk'
+        operator: 'equal'
     });
 };
 
