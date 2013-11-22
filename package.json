@@ -1,6 +1,6 @@
 {
   "name": "grape",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A test lib inspired by Substack's tape",
   "main": "grape.js",
   "scripts": {
