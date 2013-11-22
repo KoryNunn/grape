@@ -130,3 +130,27 @@ outerGrape('grape should catch errors and not explode', function(g){
         });
     });
 });
+
+outerGrape('grape only should only run the only test', function(g){
+    var grape = createTestGrape();
+    g.plan(1);
+
+    grape.on('complete', function(results){
+        g.ok(results.match(/# tests 1/), 'Only the only ran');
+    });
+
+    grape('not only', function(t){
+
+        t.plan(1);
+
+        t.ok(true, 'ok');
+    });
+
+    grape.only('only', function(t){
+
+        t.plan(1);
+
+        t.ok(true, 'ok');
+    });
+
+});

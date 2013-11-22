@@ -12,7 +12,8 @@ function instantiate(){
         totalAssersions = 0,
         completedAssersions = 0,
         begun = false,
-        timeout = 0;
+        timeout = 0,
+        only;
 
     function Test(name, testFunction){
         this._plan = 0;
@@ -280,11 +281,23 @@ function instantiate(){
     }
 
     function grape(name, testFunction){
+        if(only){
+            return;
+        }
         totalTests++;
         testsToRun.push(new Test(name, testFunction));
         begin();
     }
     grape.timeout = setTestTimeout;
+
+    grape.only = function(name, testFunction){
+        if(only){
+            throw "There can be only one only";
+        }
+        only = true;
+        testsToRun = [new Test(name, testFunction)];
+        begin();
+    };
 
     for(var key in EventEmitter.prototype){
         grape[key] = EventEmitter.prototype[key];
