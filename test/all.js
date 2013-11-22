@@ -1,5 +1,10 @@
 var outerGrape = require('../');
 
+outerGrape.useTimeout = true;
+
+// Have to set the outer test to 'end' after the inner test, just for this use case.
+outerGrape.timeout(100);
+
 function createTestGrape(){
     var grape = outerGrape.createNewInstance();
 
