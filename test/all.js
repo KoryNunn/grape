@@ -9,6 +9,13 @@ function createTestGrape(){
     return grape;
 }
 
+function testsPassed(results){
+    var resultLines = results.split('\n');
+    resultLines.pop();
+
+    return resultLines.pop() === '# ok';
+}
+
 outerGrape('grape pass', function(g){
     var grape = createTestGrape();
     g.plan(1);
@@ -26,8 +33,10 @@ outerGrape('grape ok', function(g){
     var grape = createTestGrape();
     g.plan(1);
 
-    grape.on('complete', function(){
-        g.pass();
+    grape.on('complete', function(results){
+        if(testsPassed(results)){
+            g.pass();
+        }
     });
 
     grape('t.ok', function(t){
@@ -38,7 +47,16 @@ outerGrape('grape ok', function(g){
     });
 });
 
-return;
+outerGrape('grape plan should work', function(g){
+    var grape = createTestGrape();
+    g.plan(1);
+
+    grape.on('complete', function(results){
+        if(testsPassed(results)){
+            g.pass();
+        }
+    });
+
     grape('t.end ok', function(t){
 
         t.plan(2);
@@ -48,6 +66,17 @@ return;
         t.ok(true, 'ok');
 
         t.end('ok');
+    });
+});
+
+outerGrape('grape assert after end should fail', function(g){
+    var grape = createTestGrape();
+    g.plan(1);
+
+    grape.on('complete', function(results){
+        if(!testsPassed(results)){
+            g.pass();
+        }
     });
 
     grape('t.end not ok', function(t){
@@ -60,6 +89,17 @@ return;
 
         t.ok(true, 'ok');
     });
+});
+
+outerGrape('grape plan != count should fail', function(g){
+    var grape = createTestGrape();
+    g.plan(1);
+
+    grape.on('complete', function(results){
+        if(!testsPassed(results)){
+            g.pass();
+        }
+    });
 
     grape('plan != count', function(t){
 
@@ -67,13 +107,21 @@ return;
 
         t.ok(true, 'ok');
     });
+});
 
-    grape('error', function(t){
+outerGrape('grape should catch errors and not explode', function(g){
+    var grape = createTestGrape();
+    g.plan(1);
 
-        t.plan(1);
+    g.doesNotThrow(function(){
+        grape('error', function(t){
 
-        // throw an error
-        a.b = c;
+            t.plan(1);
 
-        t.ok(true, 'ok');
+            // throw an error
+            a.b = c;
+
+            t.ok(true, 'ok');
+        });
     });
+});
