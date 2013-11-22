@@ -1,8 +1,9 @@
 var EventEmitter = require('events').EventEmitter,
     deepEqual = require('deep-equal'),
-    encodeResults = require('./results');
+    encodeResults = require('./results'),
+    isNode = typeof module !== 'undefined';
 
-var nextTick = setImmediate || process.nextTick;
+var nextTick = isNode ? process.nextTick : window.setImmediate || window.setTimeout;
 
 function Test(name, testFunction){
     this._plan = 0;
