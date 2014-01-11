@@ -80,6 +80,8 @@ function instantiate(){
         }else{
             this._assert({
                 ok: false,
+                expected: this._plan,
+                actual: this._count,
                 message: 'plan != count',
                 operator: 'end'
             });
@@ -304,6 +306,7 @@ function instantiate(){
     }
 
     grape.createNewInstance = instantiate;
+    grape.Test = Test;
 
     return grape;
 }

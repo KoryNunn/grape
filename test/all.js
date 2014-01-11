@@ -114,6 +114,33 @@ outerGrape('grape plan != count should fail', function(g){
     });
 });
 
+outerGrape('grape can be extended', function(g){
+    var grape = createTestGrape();
+    g.plan(1);
+
+    grape.Test.prototype.closeTo = function(value1, value2, delta, message){
+        this._assert({
+            ok: Math.abs(value1 - value2) < delta,
+            message : message || String(error),
+            operator : 'closeTo',
+            actual : error
+        });
+    };
+
+    grape.on('complete', function(results){
+        if(!testsPassed(results)){
+            g.pass();
+        }
+    });
+
+    grape('plan != count', function(t){
+
+        t.plan(2);
+
+        t.closeTo(1,2,1, 'ok');
+    });
+});
+
 outerGrape('grape should catch errors and not explode', function(g){
     var grape = createTestGrape();
     g.plan(1);
