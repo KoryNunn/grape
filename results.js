@@ -58,6 +58,8 @@ function encodeResults(results){
         if(test._plan !== test._count){
             test._assert({
                 ok: false,
+                expected: test._plan,
+                actual: test._count,
                 message: 'plan != count',
                 operator: 'end'
             });
