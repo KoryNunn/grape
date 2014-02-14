@@ -150,6 +150,16 @@ function instantiate(){
         });
     };
 
+    Test.prototype.notEqual = function(value, expected, message){
+        this._assert({
+            actual: value,
+            expected: expected,
+            ok: value !== expected,
+            message: message,
+            operator: 'notEqual'
+        });
+    };
+
     Test.prototype.deepEqual = function(value, expected, message){
         this._assert({
             actual: value,
