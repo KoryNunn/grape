@@ -89,7 +89,7 @@ function encodeResults(results){
         output += '\n# ok\n';
     }
 
-    return output;
+    return [output, failed];
 }
 
 module.exports = encodeResults;

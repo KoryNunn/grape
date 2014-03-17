@@ -29,7 +29,7 @@ function instantiate(){
 
     function setTestTimeout(time){
         timeout = Math.max(timeout, time);
-    };
+    }
 
     Test.prototype.timeout = setTestTimeout;
 
@@ -271,10 +271,11 @@ function instantiate(){
             // tests level problem
         }
 
-        grape.emit('complete', results);
+        grape.emit('complete', results[0]);
 
         if(!grape.silent){
-            console.log(results);
+            console.log(results[0]);
+            process.exit(results[1]);
         }
     }
 
