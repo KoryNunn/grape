@@ -275,7 +275,9 @@ function instantiate(){
 
         if(!grape.silent){
             console.log(results[0]);
-            process.exit(results[1]);
+            if(process && process.exit){
+                process.exit(results[1]);
+            }
         }
     }
 
