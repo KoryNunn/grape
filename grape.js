@@ -289,7 +289,7 @@ function instantiate(){
             begun = true;
             nextTick(runNextTest);
             nextTick(function(){
-                if(!process || !process.on || grape.useTimeout){
+                if(!process || process.title === 'browser' || grape.useTimeout){
                     setTimeout(complete, timeout);
                 }else{
                     process.on('exit', complete);
