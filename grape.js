@@ -1,6 +1,7 @@
 var EventEmitter = require('events').EventEmitter,
     deepEqual = require('deep-equal'),
-    encodeResults = require('./results');
+    encodeResults = require('./results'),
+    clone = require('clone');
 
 var nextTick = process && process.nextTick || setTimeout;
 
@@ -61,6 +62,8 @@ function instantiate(){
             }
             this.fail('asserted after test has ended');
         }
+        details.actual = clone(details.actual);
+        details.expected = clone(details.expected);
         this._assersions.push(details);
     };
 

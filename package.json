@@ -9,6 +9,7 @@
   "author": "Kory Nunn <knunn187@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "clone": "^0.1.18",
     "deep-equal": "~0.1.0"
   },
   "directories": {
